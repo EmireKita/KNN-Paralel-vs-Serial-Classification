@@ -1,4 +1,4 @@
-# README – Implementasi KNN Serial dan Paralel (Python)
+# Implementasi KNN Serial dan Paralel (Python)
 
 ## 1. Gambaran Umum
 
