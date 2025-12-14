@@ -65,7 +65,6 @@ Simpan prediksi
 
 * Menggunakan satu core CPU
 * Implementasi sederhana
-* Waktu eksekusi relatif lebih lama
 * Digunakan sebagai *baseline* perbandingan
 
 ---
@@ -87,32 +86,57 @@ Karena setiap data uji bersifat **independen**, pendekatan ini sangat cocok untu
 
 ### 3.2 Pendistribusian Tugas (Dengan Nomor Baris)
 
-Cuplikan kode berikut menunjukkan proses pembagian data uji:
+Bagian kode berikut menunjukkan proses pembagian data uji dan distribusi tugas ke banyak proses:
 
 ```python
-1  num_processes = mp.cpu_count()
-2
-3  batch_size = len(X_test) // num_processes
-4  tasks = []
-5
-6  for i in range(num_processes):
-7      start = i * batch_size
-8      end = len(X_test) if i == num_processes - 1 else (i + 1) * batch_size
-9      tasks.append((X_train, y_train, X_test[start:end], k))
+ 1  X_train, X_test, y_train, y_test = load_and_preprocess(...)
+ 2
+ 3  k = 5
+ 4  num_processes = mp.cpu_count()
+ 5
+ 6  batch_size = len(X_test) // num_processes
+ 7  tasks = []
+ 8
+ 9  for i in range(num_processes):
+10      start = i * batch_size
+11      end = len(X_test) if i == num_processes - 1 else (i + 1) * batch_size
+12      tasks.append((X_train, y_train, X_test[start:end], k))
+13
+14 start_time = time.perf_counter()
+15
+16 with mp.Pool(processes=num_processes) as pool:
+17     results = pool.map(knn_batch, tasks)
+18
+19 end_time = time.perf_counter()
+20
+21 predictions = []
+22 for part in results:
+23     predictions.extend(part)
 ```
-
-Penjelasan singkat:
-
-* Baris 1: Menentukan jumlah proses berdasarkan core CPU
-* Baris 3: Menentukan ukuran batch data uji
-* Baris 6–9: Membagi data uji ke beberapa proses
 
 ---
 
 ### 3.3 Graf Paralelisasi
+```
+[1–8] Inisialisasi & setup
+  ↓
+[9-13] Loop pembagian data
+  ↓
+[14-15] Memulai Perhitungan waktu
+  ↓
+[16–17] pool.map()  ← ← ← ← ← ← ←
+   ├─ Process 1: knn_batch
+   ├─ Process 2: knn_batch
+   ├─ Process 3: knn_batch
+   └─ Process N: knn_batch
+  ↓   (SINKRONISASI)
+[19] end_time (Perhitungan Waktu selesai
+  ↓
+[21–23] Gabung hasil
+```
 
 ```
-                    X_train, y_train
+                 Load & Preprocess Dataset
                            |
         ------------------------------------------------
         |              |              |               |
@@ -120,10 +144,12 @@ Penjelasan singkat:
         |              |              |               |
   X_test[0:a]    X_test[a:b]    X_test[b:c]    X_test[...]
         |              |              |               |
-   KNN Serial     KNN Serial     KNN Serial      KNN Serial
+   knn_batch     knn_batch     knn_batch      knn_batch
+        |              |              |               |
+   pred[ ]        pred[ ]        pred[ ]        pred[ ]
         ------------------------------------------------
                            |
-                   Gabung Hasil Prediksi
+                Gabung Hasil Prediksi (extend)
 ```
 
 Makna graf:
@@ -137,7 +163,6 @@ Makna graf:
 ### 3.4 Karakteristik KNN Paralel
 
 * Memanfaatkan multi-core CPU
-* Waktu eksekusi lebih cepat
 * Ada overhead pembuatan dan manajemen proses
 * Akurasi sama dengan versi serial
 
