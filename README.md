@@ -1,5 +1,3 @@
-# KNN-Paralel-vs-Serial-Classification
-Program yang membandingkan sistem serial dengan sistem paralel untuk klasifikasi menggunakan KNN pada dataset Crop_Recommendation.csv
 # README – Implementasi KNN Serial dan Paralel (Python)
 
 ## 1. Gambaran Umum
