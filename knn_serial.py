@@ -48,7 +48,14 @@ if __name__ == "__main__":
     # =========================
     # 🔹 OUTPUT HASIL
     # =========================
+    print("\n=== Program Klasifikasi menggunakan KNN Serial ===")
+    print("Kelompok Syncro")
+    print("Anggota Kelompok:")
+    print("Emire Kita           (1152700031)")
+    print("Rafi Muhammad Akbar  (1152700017)")
+
     print("\n=== HASIL KNN SERIAL ===")
+    print("Jumlah data latih:", len(X_train))
     print("Jumlah data uji:", len(X_test))
     print("Waktu total KNN Serial:", end_time - start_time, "detik")
 

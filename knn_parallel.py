@@ -49,7 +49,14 @@ if __name__ == "__main__":
     # =========================
     # 🔹 TAMPILKAN HASIL KNN
     # =========================
+    print("\n=== Program Klasifikasi menggunakan KNN Paralel ===")
+    print("Kelompok Syncro")
+    print("Anggota Kelompok:")
+    print("Emire Kita           (1152700031)")
+    print("Rafi Muhammad Akbar  (1152700017)")
 
+    print("\n=== HASIL KNN PARALLEL ===")
+    print("Jumlah data latih:", len(X_train))
     print("\nJumlah data uji:", len(X_test))
     print("Waktu total KNN Paralel:", end_time - start_time, "detik")
 
@@ -60,13 +67,17 @@ if __name__ == "__main__":
     for i in range(10):
         print(f"{i+1:2d} | {y_test[i]:11s} | {predictions[i]}")
 
-    # Hitung akurasi
+    # =========================
+    # 🔹 AKURASI
+    # =========================
     correct = sum(1 for i in range(len(y_test)) if y_test[i] == predictions[i])
     accuracy = correct / len(y_test)
 
     print("\nAkurasi KNN:", round(accuracy * 100, 2), "%")
 
-    # Distribusi hasil prediksi
+    # =========================
+    # 🔹 DISTRIBUSI LABEL
+    # =========================
     print("\nDistribusi hasil prediksi:")
     counter = Counter(predictions)
     for label, count in counter.most_common(5):
