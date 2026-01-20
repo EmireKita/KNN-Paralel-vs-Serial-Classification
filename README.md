@@ -17,9 +17,84 @@ Dengan demikian, perbedaan hasil hanya terletak pada **waktu eksekusi**, bukan a
 
 ---
 
-## 2. KNN Serial
+## 2. Instalasi dan Persiapan Lingkungan (README)
 
-### 2.1 Konsep Dasar
+Bagian ini menjelaskan langkah-langkah instalasi Python dan pustaka (library) yang digunakan dalam proyek KNN serial dan paralel.
+
+### 2.1 Prasyarat
+
+Pastikan pada sistem Anda telah terpasang:
+
+* Python versi **3.8 atau lebih baru**
+* Package manager **pip**
+
+Untuk mengecek versi Python:
+
+```bash
+python --version
+```
+
+atau
+
+```bash
+python3 --version
+```
+
+---
+
+### 2.2 Library yang Digunakan
+
+Proyek ini menggunakan library berikut:
+
+* **NumPy** → operasi numerik dan perhitungan jarak
+* **Pandas** → manipulasi dan preprocessing dataset
+* **multiprocessing** → paralelisasi proses KNN
+* **collections** → voting label mayoritas (`Counter`)
+* **scikit-learn (sklearn)** → pembagian data latih–uji dan preprocessing
+* **time** → pengukuran waktu eksekusi
+
+> Catatan: `multiprocessing`, `collections`, dan `time` merupakan library bawaan Python (standard library) sehingga tidak perlu diinstal terpisah.
+
+---
+
+### 2.3 Instalasi Library
+
+Jalankan perintah berikut untuk menginstal library yang diperlukan:
+
+```bash
+pip install numpy pandas scikit-learn
+```
+
+Jika menggunakan `pip3`:
+
+```bash
+pip3 install numpy pandas scikit-learn
+```
+
+---
+
+### 2.4 Verifikasi Instalasi
+
+Pastikan semua library dapat diimpor tanpa error dengan menjalankan:
+
+```python
+import numpy as np
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from collections import Counter
+import multiprocessing as mp
+import time
+
+print("Semua library berhasil diimpor.")
+```
+
+Jika tidak muncul error, maka lingkungan Python sudah siap digunakan.
+
+---
+
+## 3. KNN Serial
+
+### 3.1 Konsep Dasar
 
 Pada KNN serial, setiap data uji diproses **satu per satu** secara berurutan:
 
@@ -33,7 +108,7 @@ Tidak ada pembagian tugas atau proses paralel.
 
 ---
 
-### 2.2 Alur Eksekusi Serial
+### 3.2 Alur Eksekusi Serial
 
 ```
 X_test[0] → KNN → pred[0]
@@ -59,7 +134,7 @@ Simpan prediksi
 
 ---
 
-### 2.3 Karakteristik KNN Serial
+### 3.3 Karakteristik KNN Serial
 
 * Menggunakan satu core CPU
 * Implementasi sederhana
@@ -67,9 +142,9 @@ Simpan prediksi
 
 ---
 
-## 3. KNN Paralel (Multiprocessing)
+## 4. KNN Paralel (Multiprocessing)
 
-### 3.1 Konsep Paralelisasi
+### 4.1 Konsep Paralelisasi
 
 Pada KNN paralel, percepatan dilakukan dengan cara:
 
@@ -82,7 +157,7 @@ Karena setiap data uji bersifat **independen**, pendekatan ini sangat cocok untu
 
 ---
 
-### 3.2 Pendistribusian Tugas (Dengan Nomor Baris)
+### 4.2 Pendistribusian Tugas (Dengan Nomor Baris)
 
 Bagian kode berikut menunjukkan proses pembagian data uji dan distribusi tugas ke banyak proses:
 
@@ -114,7 +189,8 @@ Bagian kode berikut menunjukkan proses pembagian data uji dan distribusi tugas k
 
 ---
 
-### 3.3 Graf Paralelisasi
+### 4.3 Graf Paralelisasi
+
 ```
 [1–8] Inisialisasi & setup
   ↓
@@ -158,7 +234,7 @@ Makna graf:
 
 ---
 
-### 3.4 Karakteristik KNN Paralel
+### 4.4 Karakteristik KNN Paralel
 
 * Memanfaatkan multi-core CPU
 * Ada overhead pembuatan dan manajemen proses
@@ -166,7 +242,7 @@ Makna graf:
 
 ---
 
-## 4. Perbandingan Singkat
+## 5. Perbandingan Singkat
 
 | Aspek          | KNN Serial | KNN Paralel  |
 | -------------- | ---------- | ------------ |
@@ -178,7 +254,7 @@ Makna graf:
 
 ---
 
-## 5. Kesimpulan
+## 6. Kesimpulan
 
 * KNN serial digunakan sebagai **baseline performa**
 * KNN paralel mempercepat proses klasifikasi tanpa mengubah hasil
