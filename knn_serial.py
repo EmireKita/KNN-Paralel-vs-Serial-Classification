@@ -77,7 +77,7 @@ if __name__ == "__main__":
     # =========================
     # 🔹 DISTRIBUSI LABEL
     # =========================
-    print("\nDistribusi hasil prediksi (Top 5):")
+    print("\nDistribusi hasil prediksi:")
     counter = Counter(predictions)
-    for label, count in counter.most_common(5):
+    for label, count in counter.most_common(22):
         print(f"{label}: {count}")
